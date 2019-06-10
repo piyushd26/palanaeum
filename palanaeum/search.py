@@ -132,10 +132,10 @@ class TextSearchFilter(SearchFilter):
 
             if not token_results:
                 token_results = {}
-                entries_with_token = EntryVersion.newest.filter(lines__icontains=token).values_list('entry_id', flat=True)
+                entries_with_token = EntryVersion.newest.filter(lines__text__icontains=token).values_list('entry_id', flat=True)
                 # Need to accept only the newest versions of entries! I need to make that newest flag happen!
                 for entry_id in entries_with_token:
-                    token_results[entry_id] += 1
+                    token_results[entry_id] = 10  # Exact match is much more valuable
                 SEARCH_CACHE.set(cache_key, token_results, SEARCH_CACHE_TTL)
 
             for entry_id, rank in token_results.items():
@@ -144,7 +144,8 @@ class TextSearchFilter(SearchFilter):
 
     def get_entry_ids(self) -> frozenset:
         results = self._get_normal_search_results()
-        results.update(self._get_exact_search_results().items())
+        for key, value in self._get_exact_search_results().items():
+            results[key] += value
         return frozenset((entry_id, rank) for entry_id, rank in results.items())
 
     def init_from_get_params(self, get_params: QueryDict):
