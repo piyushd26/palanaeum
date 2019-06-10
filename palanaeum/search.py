@@ -132,7 +132,7 @@ class TextSearchFilter(SearchFilter):
 
             if not token_results:
                 token_results = {}
-                entries_with_token = EntryVersion.newest.filter(entry_line__icontains=token).values_list('entry_id', flat=True)
+                entries_with_token = EntryVersion.newest.filter(lines__icontains=token).values_list('entry_id', flat=True)
                 # Need to accept only the newest versions of entries! I need to make that newest flag happen!
                 for entry_id in entries_with_token:
                     token_results[entry_id] += 1
