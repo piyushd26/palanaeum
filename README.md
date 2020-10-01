@@ -1,4 +1,4 @@
-Installing
+Installing - This project is amazing.
 ==========
 
 To run Palanaeum on your local machine for development purposes you need to set up a virtual machine.
